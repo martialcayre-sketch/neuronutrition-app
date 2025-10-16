@@ -1,0 +1,74 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function userDoc(uid) {
+      return get(/databases/$(database)/documents/users/$(uid));
+    }
+
+    function isPractitioner() {
+      return isSignedIn() && userDoc(request.auth.uid).data.role == 'practitioner';
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function hasField(data, field) {
+      return data.keys().hasAny([field]);
+    }
+
+    match /users/{userId} {
+      allow get: if isOwner(userId) || isPractitioner();
+      allow list: if isPractitioner();
+
+      allow create: if isOwner(userId)
+        && (request.auth.token.email == null || request.resource.data.email == request.auth.token.email)
+        && request.resource.data.role in ['patient', 'practitioner']
+        && (
+          (request.resource.data.role == 'patient'
+            && hasField(request.resource.data, 'chosenPractitionerId')
+            && request.resource.data.chosenPractitionerId is string
+            && request.resource.data.approvalStatus == 'pending')
+          ||
+          (request.resource.data.role == 'practitioner'
+            && !hasField(request.resource.data, 'chosenPractitionerId')
+            && request.resource.data.approvalStatus == 'approved')
+        );
+
+      allow update: if isOwner(userId)
+        && request.resource.data.keys().hasOnly(resource.data.keys())
+        && request.resource.data.role == resource.data.role
+        && request.resource.data.email == resource.data.email
+        && request.resource.data.uid == resource.data.uid
+        && request.resource.data.createdAt == resource.data.createdAt
+        && request.resource.data.chosenPractitionerId == resource.data.chosenPractitionerId
+        && request.resource.data.approvalStatus == resource.data.approvalStatus
+        && request.resource.data.approvedAt == resource.data.approvedAt;
+
+      allow update: if isPractitioner()
+        && resource.data.role == 'patient'
+        && resource.data.chosenPractitionerId == request.auth.uid
+        && request.resource.data.role == resource.data.role
+        && request.resource.data.email == resource.data.email
+        && request.resource.data.uid == resource.data.uid
+        && request.resource.data.createdAt == resource.data.createdAt
+        && request.resource.data.chosenPractitionerId == resource.data.chosenPractitionerId
+        && request.resource.data.displayName == resource.data.displayName
+        && request.resource.data.emailVerified == resource.data.emailVerified
+        && request.resource.data.approvalStatus in ['approved', 'rejected', 'pending']
+        && request.resource.data.keys().hasOnly(resource.data.keys().concat(['approvedAt']));
+
+      allow delete: if false;
+    }
+  }
+}
+
+// Tests (manuel) :
+// - Practitioner (assigné) met à jour approvalStatus -> ALLOW
+// - Patient modifie son displayName -> ALLOW
+// - Patient tente de changer role -> DENY
+// - Praticien non assigné tente update -> DENY
