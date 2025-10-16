@@ -1,8 +1,9 @@
 import { Formik, Form, Field, useFormikContext } from 'formik';
+import type { FieldProps } from 'formik';
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
-import * as Yup from 'yup';
+// import * as Yup from 'yup';
 
 import Button from '../components/ui/Button';
 import Input from '../components/ui/Input';
@@ -34,8 +35,9 @@ export default function RegisterPatient() {
               await createPatientProfile(values);
               toast.success('Compte patient créé. Vérifiez votre e-mail.');
               navigate('/patient/pending-approval');
-            } catch (e: any) {
-              toast.error(e.message || 'Erreur lors de la création');
+            } catch (e: unknown) {
+              const msg = (e as { message?: string })?.message ?? 'Erreur lors de la création';
+              toast.error(msg);
             } finally {
               setSubmitting(false);
             }
@@ -45,41 +47,45 @@ export default function RegisterPatient() {
             <Form className="space-y-4">
               <AutoSelectPractitioner options={options} />
               <Field name="displayName">
-                {({ field }: any) => (
+                {({ field }: FieldProps<string>) => (
                   <Input
                     label="Nom affiché"
                     {...field}
-                    error={touched.displayName && (errors.displayName as string)}
+                    error={touched.displayName ? (errors.displayName as string | undefined) : undefined}
                   />
                 )}
               </Field>
               <Field name="email">
-                {({ field }: any) => (
+                {({ field }: FieldProps<string>) => (
                   <Input
                     label="Email"
                     type="email"
                     {...field}
-                    error={touched.email && (errors.email as string)}
+                    error={touched.email ? (errors.email as string | undefined) : undefined}
                   />
                 )}
               </Field>
               <Field name="password">
-                {({ field }: any) => (
+                {({ field }: FieldProps<string>) => (
                   <Input
                     label="Mot de passe"
                     type="password"
                     {...field}
-                    error={touched.password && (errors.password as string)}
+                    error={touched.password ? (errors.password as string | undefined) : undefined}
                   />
                 )}
               </Field>
               <Field name="chosenPractitionerId">
-                {({ field }: any) => (
+                {({ field }: FieldProps<string>) => (
                   <Select
                     label="Praticien choisi"
                     options={options}
                     {...field}
-                    error={touched.chosenPractitionerId && (errors.chosenPractitionerId as string)}
+                    error={
+                      touched.chosenPractitionerId
+                        ? (errors.chosenPractitionerId as string | undefined)
+                        : undefined
+                    }
                   />
                 )}
               </Field>
@@ -94,8 +100,15 @@ export default function RegisterPatient() {
   );
 }
 
+type PatientFormValues = {
+  email: string;
+  password: string;
+  displayName: string;
+  chosenPractitionerId: string;
+};
+
 function AutoSelectPractitioner({ options }: { options: { value: string; label: string }[] }) {
-  const { values, setFieldValue } = useFormikContext<any>();
+  const { values, setFieldValue } = useFormikContext<PatientFormValues>();
   useEffect(() => {
     if (options.length === 1 && !values.chosenPractitionerId) {
       setFieldValue('chosenPractitionerId', options[0].value);

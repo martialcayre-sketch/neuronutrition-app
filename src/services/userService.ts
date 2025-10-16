@@ -3,6 +3,7 @@ import {
   updateProfile,
   sendEmailVerification,
 } from 'firebase/auth';
+import type { DocumentData, Timestamp } from 'firebase/firestore';
 import {
   doc,
   setDoc,
@@ -37,10 +38,10 @@ export async function createPractitionerProfile({
     email: cred.user.email || email,
     role: 'practitioner',
     displayName,
-    createdAt: serverTimestamp() as any,
+    createdAt: serverTimestamp() as unknown as Timestamp,
     emailVerified: cred.user.emailVerified,
     approvalStatus: 'approved',
-  } as any;
+  };
   await setDoc(ref, data, { merge: true });
   return cred.user;
 }
@@ -65,11 +66,11 @@ export async function createPatientProfile({
     email: cred.user.email || email,
     role: 'patient',
     displayName,
-    createdAt: serverTimestamp() as any,
+    createdAt: serverTimestamp() as unknown as Timestamp,
     emailVerified: cred.user.emailVerified,
     chosenPractitionerId,
     approvalStatus: 'pending',
-  } as any;
+  };
   await setDoc(ref, data, { merge: true });
   return cred.user;
 }
@@ -78,13 +79,37 @@ export async function getCurrentUserProfile(): Promise<UserProfile | null> {
   const u = auth.currentUser;
   if (!u) return null;
   const snap = await getDoc(doc(db, USERS, u.uid));
-  return (snap.exists() ? ({ id: snap.id, ...snap.data() } as any) : null) as UserProfile | null;
+  if (!snap.exists()) return null;
+  const data = snap.data() as DocumentData;
+  return {
+    uid: data.uid ?? snap.id,
+    email: data.email,
+    role: data.role,
+    displayName: data.displayName,
+    createdAt: data.createdAt,
+    emailVerified: data.emailVerified,
+    chosenPractitionerId: data.chosenPractitionerId,
+    approvalStatus: data.approvalStatus,
+    approvedAt: data.approvedAt,
+  } as UserProfile;
 }
 
 export function watchUserProfile(uid: string, cb: (p: UserProfile | null) => void) {
   const unsubscribe = onSnapshot(doc(db, USERS, uid), (snap) => {
-    if (snap.exists()) cb({ id: snap.id, ...snap.data() } as any as UserProfile);
-    else cb(null);
+    if (snap.exists()) {
+      const d = snap.data() as DocumentData;
+      cb({
+        uid: d.uid ?? snap.id,
+        email: d.email,
+        role: d.role,
+        displayName: d.displayName,
+        createdAt: d.createdAt,
+        emailVerified: d.emailVerified,
+        chosenPractitionerId: d.chosenPractitionerId,
+        approvalStatus: d.approvalStatus,
+        approvedAt: d.approvedAt,
+      } as UserProfile);
+    } else cb(null);
   });
   return unsubscribe;
 }
@@ -95,7 +120,7 @@ export async function listPractitioners(): Promise<
   const q = query(collection(db, USERS), where('role', '==', 'practitioner'));
   const res = await getDocs(q);
   return res.docs.map((d) => {
-    const data = d.data() as any;
+    const data = d.data() as DocumentData;
     return {
       uid: data.uid ?? d.id,
       displayName: data.displayName || data.email || 'Praticien',

@@ -40,8 +40,9 @@ export default function VerifyEmail() {
       setSending(true);
       await sendEmailVerification(auth.currentUser);
       toast.success('E-mail de vérification renvoyé.');
-    } catch (e: any) {
-      toast.error(e.message || 'Impossible d&apos;envoyer l&apos;e-mail');
+    } catch (e: unknown) {
+      const msg = (e as { message?: string })?.message ?? "Impossible d'envoyer l'e-mail";
+      toast.error(msg);
     } finally {
       setSending(false);
     }

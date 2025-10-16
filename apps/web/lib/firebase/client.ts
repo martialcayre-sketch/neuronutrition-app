@@ -31,5 +31,7 @@ if (
 ) {
   try {
     connectFunctionsEmulator(functions, '127.0.0.1', 5001);
-  } catch {}
+  } catch {
+    // ignore emulator connect errors in prod/local without emulator
+  }
 }

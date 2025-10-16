@@ -1,6 +1,6 @@
 'use client';
 import { createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
-import { collection, getDocs } from 'firebase/firestore';
+import { collection, getDocs, type DocumentData } from 'firebase/firestore';
 import { useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
 
@@ -34,26 +34,33 @@ export default function PatientSignupPage() {
           if (!pSnap.empty) {
             const arr = pSnap.docs.map((d) => ({
               id: d.id,
-              username: (d.data() as any).username,
-              label: (d.data() as any).username || d.id,
+              username: (d.data() as DocumentData).username as string | undefined,
+              label: ((d.data() as DocumentData).username as string | undefined) || d.id,
             }));
             setOptions(arr);
             setPractitioner(arr[0]?.username || arr[0]?.id || '');
             return;
           }
-        } catch {}
+        } catch {
+          // ignore and fallback
+        }
         // fallback
         try {
           const uSnap = await getDocs(collection(db, 'users'));
           const arr = uSnap.docs
             .map((d) => ({
               id: d.id,
-              label: (d.data() as any).displayName || (d.data() as any).email || d.id,
+              label:
+                ((d.data() as DocumentData).displayName as string | undefined) ||
+                ((d.data() as DocumentData).email as string | undefined) ||
+                d.id,
             }))
-            .filter((x) => true);
+            .filter(() => true);
           setOptions(arr);
           setPractitioner(arr[0]?.id || '');
-        } catch {}
+        } catch {
+          // ignore
+        }
       };
       await tryCollections();
     })();
@@ -81,8 +88,9 @@ export default function PatientSignupPage() {
       await sendEmailVerification(cred.user);
       setMessage('Compte créé. Vérifiez votre email pour valider votre compte.');
       setTimeout(() => router.push('/patient/login'), 1500);
-    } catch (err: any) {
-      setError(err?.message ?? "Échec de l'inscription");
+    } catch (err: unknown) {
+      const msg = (err as { message?: string })?.message ?? "Échec de l'inscription";
+      setError(msg);
     }
   };
 
@@ -145,9 +153,9 @@ export default function PatientSignupPage() {
             />
             <label className="flex items-center gap-2 text-sm text-gray-700">
               <input type="checkbox" required />
-              <span>J'accepte les CGU</span>
+              <span>J&apos;accepte les CGU</span>
             </label>
-            <button className="w-full bg-blue-600 text-white rounded py-2">S'inscrire</button>
+            <button className="w-full bg-blue-600 text-white rounded py-2">S&apos;inscrire</button>
           </form>
         </CardContent>
       </Card>

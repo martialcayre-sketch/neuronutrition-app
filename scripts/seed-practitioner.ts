@@ -1,3 +1,4 @@
+import type { ServiceAccount } from 'firebase-admin';
 import { initializeApp, cert } from 'firebase-admin/app';
 import { getAuth } from 'firebase-admin/auth';
 import { getFirestore } from 'firebase-admin/firestore';
@@ -20,7 +21,7 @@ async function main() {
   const password = process.env.SEED_PRACTITIONER_PASSWORD!;
   if (!email || !username || !password) throw new Error('Missing seed env');
 
-  initializeApp({ credential: cert(getServiceAccount() as any) });
+  initializeApp({ credential: cert(getServiceAccount() as ServiceAccount) });
   const auth = getAuth();
   const db = getFirestore();
 

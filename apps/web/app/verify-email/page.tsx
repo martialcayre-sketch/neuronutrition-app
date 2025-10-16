@@ -42,10 +42,10 @@ export default function VerifyEmailPage() {
             onClick={resend}
             className="px-4 py-2 bg-blue-600 text-white rounded"
           >
-            Renvoyer l'e-mail
+            Renvoyer l&apos;e-mail
           </button>
           <button onClick={iveVerified} className="px-4 py-2 bg-gray-200 rounded">
-            J'ai vérifié
+            J&apos;ai vérifié
           </button>
         </div>
       </div>

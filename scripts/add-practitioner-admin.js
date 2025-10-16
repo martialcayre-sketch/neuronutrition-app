@@ -19,7 +19,6 @@ if (process.env.FIRESTORE_EMULATOR_HOST) {
 async function main() {
   const email = 'martialcayre@gmail.com';
   const displayName = 'Martial CAYRE';
-  const password = 'Plexmartial1902'; // Pour mémoire, non stocké dans Firestore
   const uid = 'martial-cayre-unique'; // UID fixe pour ce praticien
 
   // Ajoute le document utilisateur

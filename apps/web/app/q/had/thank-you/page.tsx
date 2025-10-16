@@ -1,5 +1,3 @@
-import { Suspense } from 'react';
-
 import { Button } from '@/components/ui/button';
 
 export default function ThankYouPage({ searchParams }: { searchParams: { sessionId: string } }) {
@@ -17,8 +15,8 @@ export default function ThankYouPage({ searchParams }: { searchParams: { session
           <Button className="w-full" onClick={() => (window.location.href = '/q')}>
             Retour aux questionnaires
           </Button>
-          <Button variant="outline" className="w-full" onClick={() => (window.location.href = '/')}>
-            Retour à l'accueil
+          <Button variant="outline" className="w-full" onClick={() => (window.location.href = '/')}>\
+            Retour à l&apos;accueil
           </Button>
         </div>
 

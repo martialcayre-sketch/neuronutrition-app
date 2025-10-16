@@ -1,18 +1,18 @@
 'use client';
-import { auth, db } from './firebase/client';
 import {
   signInWithEmailAndPassword,
   sendEmailVerification as clientSendEmailVerification,
 } from 'firebase/auth';
-import { collection, getDocs, query, where } from 'firebase/firestore';
-import { cookies } from 'next/headers';
+import { collection, getDocs, query, where, type DocumentData } from 'firebase/firestore';
+
+import { auth, db } from './firebase/client';
 
 async function getEmailByUsername(username: string): Promise<string | null> {
   const q = query(collection(db, 'users'), where('username', '==', username));
   const snap = await getDocs(q);
   if (snap.empty) return null;
-  const data = snap.docs[0].data() as any;
-  return data.email ?? null;
+  const data = snap.docs[0].data() as DocumentData;
+  return (data.email as string) ?? null;
 }
 
 export async function signInWithEmailOrUsername(identifier: string, password: string) {

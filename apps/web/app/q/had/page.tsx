@@ -1,13 +1,11 @@
 'use client';
 
-import { type QuestionnaireDTO, type ResponseDTO } from '@neuronutrition/core';
+import { type ResponseDTO } from '@neuronutrition/core';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
 import { QuestionnaireForm } from '@/components/QuestionnaireForm';
-import { Button } from '@/components/ui/button';
 import { ErrorMessage } from '@/components/ui/error-message';
-import { FormError } from '@/components/ui/form-error';
 
 export default function HadQuestionnairePage() {
   const router = useRouter();
@@ -48,7 +46,7 @@ export default function HadQuestionnairePage() {
   return (
     <div className="max-w-2xl mx-auto px-4 py-8">
       <h1 className="text-2xl font-semibold mb-6">
-        Questionnaire d'auto-évaluation HAD
+        Questionnaire d&apos;auto-évaluation HAD
         <span className="text-sm font-normal text-muted-foreground ml-2">
           (Hospital Anxiety and Depression Scale)
         </span>

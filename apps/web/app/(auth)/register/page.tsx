@@ -29,7 +29,7 @@ export default function RegisterPage() {
         router.push('/dashboard');
       }
     } catch (err) {
-      setError("Erreur lors de l'inscription.");
+      setError('Erreur lors de l\'inscription.');
     }
   };
 
@@ -37,6 +37,7 @@ export default function RegisterPage() {
     <div className="grid gap-6">
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="grid gap-4">
+          {error && <p className="text-sm text-destructive">{error}</p>}
           <div className="grid gap-2">
             <label htmlFor="email" className="text-sm font-medium">
               Email
@@ -82,7 +83,7 @@ export default function RegisterPage() {
           </div>
 
           <Button type="submit" className="w-full" isLoading={isSubmitting}>
-            S'inscrire
+            S&apos;inscrire
           </Button>
         </div>
       </form>

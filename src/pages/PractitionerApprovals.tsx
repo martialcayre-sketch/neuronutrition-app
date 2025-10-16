@@ -30,8 +30,8 @@ export default function PractitionerApprovals() {
       setPatients(
         snap.docs.map((d) => ({
           uid: d.id,
-          email: (d.data() as any).email,
-          displayName: (d.data() as any).displayName,
+          email: (d.data() as { email?: string; displayName?: string }).email ?? '',
+          displayName: (d.data() as { email?: string; displayName?: string }).displayName,
         }))
       );
     });
@@ -51,8 +51,9 @@ export default function PractitionerApprovals() {
       setPatients((prev) => prev.filter((p) => p.uid !== uid));
       await approvePatient(uid);
       toast.success('Patient approuvé');
-    } catch (e: any) {
-      toast.error(e.message || 'Erreur approbation');
+    } catch (e: unknown) {
+      const message = e instanceof Error ? e.message : 'Erreur approbation';
+      toast.error(message);
     }
   };
 
@@ -61,8 +62,9 @@ export default function PractitionerApprovals() {
       setPatients((prev) => prev.filter((p) => p.uid !== uid));
       await rejectPatient(uid);
       toast('Patient rejeté');
-    } catch (e: any) {
-      toast.error(e.message || 'Erreur rejet');
+    } catch (e: unknown) {
+      const message = e instanceof Error ? e.message : 'Erreur rejet';
+      toast.error(message);
     }
   };
 

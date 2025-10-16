@@ -13,7 +13,7 @@ interface Props {
 }
 
 export default function ProtectedRoute({ role, children }: Props) {
-  const [user] = useAuthState(auth as any);
+  const [user] = useAuthState(auth);
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
 

@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Image from 'next/image';
 
 export const metadata: Metadata = {
   title: 'Connexion | NeuroNutrition',
@@ -11,13 +12,13 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
       <div className="relative hidden h-full flex-col bg-muted p-10 text-white lg:flex dark:border-r">
         <div className="absolute inset-0 bg-neuro-900" />
         <div className="relative z-20 flex items-center text-lg font-medium">
-          <img src="/logo.svg" alt="NeuroNutrition" className="h-8 w-auto" />
+          <Image src="/logo.svg" alt="NeuroNutrition" width={128} height={32} />
         </div>
         <div className="relative z-20 mt-auto">
           <blockquote className="space-y-2">
             <p className="text-lg">
-              "La nutrition fonctionnelle m&apos;a permis de retrouver mon énergie et ma
-              concentration."
+              &ldquo;La nutrition fonctionnelle m&apos;a permis de retrouver mon énergie et ma
+              concentration.&rdquo;
             </p>
             <footer className="text-sm">Sophie Martin</footer>
           </blockquote>

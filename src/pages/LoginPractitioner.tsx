@@ -1,5 +1,6 @@
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { Formik, Form, Field } from 'formik';
+import type { FieldProps } from 'formik';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 
@@ -28,8 +29,9 @@ export default function LoginPractitioner() {
                 return navigate('/');
               }
               navigate('/practitioner/home');
-            } catch (e: any) {
-              toast.error(e.message || 'Erreur de connexion');
+            } catch (e: unknown) {
+              const msg = (e as { message?: string })?.message ?? 'Erreur de connexion';
+              toast.error(msg);
             } finally {
               setSubmitting(false);
             }
@@ -38,22 +40,22 @@ export default function LoginPractitioner() {
           {({ errors, touched, isSubmitting }) => (
             <Form className="space-y-4">
               <Field name="email">
-                {({ field }: any) => (
+                {({ field }: FieldProps<string>) => (
                   <Input
                     label="Email"
                     type="email"
                     {...field}
-                    error={touched.email && (errors.email as string)}
+                    error={touched.email ? (errors.email as string | undefined) : undefined}
                   />
                 )}
               </Field>
               <Field name="password">
-                {({ field }: any) => (
+                {({ field }: FieldProps<string>) => (
                   <Input
                     label="Mot de passe"
                     type="password"
                     {...field}
-                    error={touched.password && (errors.password as string)}
+                    error={touched.password ? (errors.password as string | undefined) : undefined}
                   />
                 )}
               </Field>

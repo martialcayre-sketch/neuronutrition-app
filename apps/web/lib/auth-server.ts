@@ -1,5 +1,6 @@
 'use server';
 import { cookies } from 'next/headers';
+
 import { adminAuth, adminDb } from './firebase/admin';
 
 export async function currentUserServer() {
