@@ -1,0 +1,29 @@
+name: Deploy Firebase
+on:
+  push:
+    branches: [ "main" ]
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 'lts/*' }
+      - run: npm i -g pnpm firebase-tools
+      - run: pnpm i
+      - name: Build Web
+        run: pnpm -F web build || pnpm build
+      - name: Deploy
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          FIREBASE_PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
+        run: |
+          if [ -n "${FIREBASE_SERVICE_ACCOUNT}" ]; then
+            echo "$FIREBASE_SERVICE_ACCOUNT" | base64 -d > sa.json
+            firebase use "$FIREBASE_PROJECT_ID"
+            firebase deploy --only functions,hosting --non-interactive --project "$FIREBASE_PROJECT_ID" --token "$(jq -r .private_key_id sa.json || true)"
+          else
+            firebase deploy --only functions,hosting --non-interactive --project "$FIREBASE_PROJECT_ID" --token "$FIREBASE_TOKEN"
+          fi
+
