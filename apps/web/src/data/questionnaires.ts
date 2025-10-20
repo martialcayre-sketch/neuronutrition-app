@@ -7,7 +7,11 @@ export const defaultCategories: QuestionnaireCategory[] = [
   { id: 'cancerologie', label: 'Cancerologie', items: [] },
   { id: 'cardiologie', label: 'Cardiologie', items: [] },
   { id: 'gastro-enterologie', label: 'Gastro-enterologie', items: [] },
-  { id: 'mode-de-vie', label: 'Mode de vie', items: [] },
+  { id: 'mode-de-vie', label: 'Mode de vie', items: [
+    { id: 'questionnaire-contextuel-mode-de-vie', label: 'questionnaire contextuel mode de vie', href: '/questionnaires/questionnaire-contextuel-mode-de-vie' },
+    { id: 'questionnaire-dactivite-et-de-depense-energetique-globale-siin', label: "questionnaire d’activité et de dépense énergétique globale SIIN", href: '/questionnaires/questionnaire-dactivite-et-de-depense-energetique-globale-siin' },
+    { id: 'mes-plaintes-actuelles-et-troubles-ressentis', label: 'Mes plaintes actuelles et troubles ressentis', href: '/questionnaires/mes-plaintes-actuelles-et-troubles-ressentis' },
+  ] },
   { id: 'neuro-psychologie', label: 'Neuro-psychologie', items: [
     { id: 'had', label: 'HAD', href: '/questionnaires/had' },
     { id: 'dnsm', label: 'DNSM', href: '/questionnaires/dnsm' },

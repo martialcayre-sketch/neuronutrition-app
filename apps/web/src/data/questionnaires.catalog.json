@@ -1,0 +1,21 @@
+[
+  {
+    "id": "questionnaire-contextuel-mode-de-vie",
+    "label": "questionnaire contextuel mode de vie",
+    "category": "mode-de-vie",
+    "pdf": "/questionnaires/Mode de vie/questionnaire-contextuel-mode-de-vie.pdf"
+  },
+  {
+    "id": "questionnaire-dactivite-et-de-depense-energetique-globale-siin",
+    "label": "questionnaire d’activité et de dépense énergétique globale SIIN",
+    "category": "mode-de-vie",
+    "pdf": "/questionnaires/Mode de vie/questionnaire-dactivite-et-de-depense-energetique-globale-siin.pdf"
+  },
+  {
+    "id": "mes-plaintes-actuelles-et-troubles-ressentis",
+    "label": "Mes plaintes actuelles et troubles ressentis",
+    "category": "mode-de-vie",
+    "pdf": "/questionnaires/Mode de vie/mes-plaintes-actuelles-et-troubles-ressentis.pdf"
+  }
+]
+
