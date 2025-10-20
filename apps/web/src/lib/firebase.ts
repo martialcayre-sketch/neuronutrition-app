@@ -1,7 +1,7 @@
 import { initializeApp, getApps } from 'firebase/app'
-import { getAuth } from 'firebase/auth'
-import { getFirestore } from 'firebase/firestore'
-import { getStorage } from 'firebase/storage'
+import { getAuth, connectAuthEmulator } from 'firebase/auth'
+import { getFirestore, connectFirestoreEmulator } from 'firebase/firestore'
+import { getStorage, connectStorageEmulator } from 'firebase/storage'
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -17,3 +17,16 @@ export const auth = getAuth(app)
 export const db = getFirestore(app)
 export const storage = getStorage(app)
 
+// Connect to emulators if requested
+const useEmulators = process.env.NEXT_PUBLIC_USE_EMULATORS === '1' || (typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'))
+if (useEmulators) {
+  try {
+    connectAuthEmulator(auth, 'http://127.0.0.1:5004', { disableWarnings: true })
+    connectFirestoreEmulator(db, '127.0.0.1', 5003)
+    connectStorageEmulator(storage, '127.0.0.1', 5005)
+    // eslint-disable-next-line no-console
+    console.log('[firebase] Connected to local emulators')
+  } catch (e) {
+    // ignore repeated connections in HMR
+  }
+}

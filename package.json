@@ -17,6 +17,8 @@
     "extract:mode": "node scripts/extract_pdf_text.mjs 'Mode de vie'"
   },
   "devDependencies": {
+    "firebase-admin": "^12.7.0",
+    "firebase-tools": "^14.20.0",
     "pdf-parse": "^2.4.5",
     "pdfjs-dist": "^5.4.296"
   }

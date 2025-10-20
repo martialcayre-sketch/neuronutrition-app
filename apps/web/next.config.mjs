@@ -1,7 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: 'export',
+  // Use default output to allow dynamic routes like /forms/[token]
 };
 
 export default nextConfig;
-

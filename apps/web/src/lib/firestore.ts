@@ -24,3 +24,10 @@ export async function addIntake(kind: 'HAD'|'PSQI'|'DNSM', payload: any) {
   await addDoc(col, { ownerUid: u.uid, kind, payload, createdAt: serverTimestamp() })
 }
 
+export async function setProfileBadge(key: string, value: Record<string, any>) {
+  const u = auth.currentUser
+  if (!u) throw new Error('Not authenticated')
+  const ref = doc(db, 'profiles', u.uid)
+  const payload: any = { badges: { [key]: { ...value, updatedAt: serverTimestamp() } } }
+  await setDoc(ref, payload, { merge: true })
+}

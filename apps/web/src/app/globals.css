@@ -4,3 +4,9 @@
 
 html, body { height: 100%; }
 
+/* Impression: n'afficher que le panneau de résultats */
+@media print {
+  body * { visibility: hidden !important; }
+  #resultats, #resultats * { visibility: visible !important; }
+  #resultats { position: absolute; left: 0; top: 0; width: 100%; }
+}

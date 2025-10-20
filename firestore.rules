@@ -12,20 +12,40 @@ service cloud.firestore {
       allow delete: if isAdmin();
     }
 
-    match /{col=profiles|intakes|plans|sessions|metrics}/{id} {
+    // Per-collection access rules (cannot use alternation in a match path)
+    match /profiles/{id} {
+      allow read, write: if isOwner(resource.data.ownerUid) || isAdmin();
+      allow create: if isSignedIn();
+    }
+    match /intakes/{id} {
+      allow read, write: if isOwner(resource.data.ownerUid) || isAdmin();
+      allow create: if isSignedIn();
+    }
+    match /plans/{id} {
+      allow read, write: if isOwner(resource.data.ownerUid) || isAdmin();
+      allow create: if isSignedIn();
+    }
+    match /sessions/{id} {
+      allow read, write: if isOwner(resource.data.ownerUid) || isAdmin();
+      allow create: if isSignedIn();
+    }
+    match /metrics/{id} {
       allow read, write: if isOwner(resource.data.ownerUid) || isAdmin();
       allow create: if isSignedIn();
     }
 
-    // Public links: allow anonymous read of link doc and write to subcollection responses when token is valid and not expired.
+    // Public patient links
     match /formLinks/{token} {
-      allow read: if true; // token is unguessable; no sensitive data stored
-      allow write: if false; // server-side/admin only create/update links
+      // Allow read of the link document (contains only metadata and questionnaireId)
+      allow read: if true;
+      // Creation/update of links should be done by server/admin only
+      allow write: if false;
+
+      // Anonymous patient responses under a link
       match /responses/{rid} {
-        allow create: if request.auth == null && exists(/databases/$(database)/documents/formLinks/$(token))
-          && (!exists(/databases/$(database)/documents/formLinks/$(token)) || true);
-        allow read: if false;
-        allow update, delete: if false;
+        // Allow anonymous creation if the parent link exists
+        allow create: if request.auth == null && exists(/databases/$(database)/documents/formLinks/$(token));
+        allow read, update, delete: if false;
       }
     }
   }
