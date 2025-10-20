@@ -1,19 +1,23 @@
-export type QOption = { value: string; label: string }
-export type QField =
-  | { type: 'radio'; id: string; label: string; options: QOption[] }
-  | { type: 'likert'; id: string; label: string; min: number; max: number; left?: string; right?: string }
-  | { type: 'multi'; id: string; label: string; options: QOption[] }
-  | { type: 'text'; id: string; label: string; placeholder?: string }
-
+export type QOption = { value: number; label: string }
+export type QField = { type: 'radio'; id: string; label: string; options: QOption[] }
 export type QSchema = { id: string; title: string; fields: QField[] }
 
-// TODO: Compléter le schéma d'après le PDF original (items, options, échelles).
+const opt = (labels: string[], values: number[]) => labels.map((l, i) => ({ label: l, value: values[i] }))
+
 export const schema: QSchema = {
   id: 'questionnaire-echelle-de-stress-de-cohen-pss-pro',
-  title: "Questionnaire échelle de stress de Cohen PSS",
+  title: 'Échelle de stress de Cohen (PSS-10)',
   fields: [
-    // Exemple minimal (à remplacer):
-    // { type: 'likert', id: 'q1', label: 'Échelle 1–10', min: 1, max: 10, left: 'Min', right: 'Max' },
-    // { type: 'radio', id: 'q2', label: 'Choix unique', options: [ { value: 'a', label: 'A' }, { value:'b', label:'B' } ] },
+    { type: 'radio', id: 'q1', label: 'Au cours du dernier mois, combien de fois avez-vous été dérangé(e) par un évènement inattendu ?', options: opt(['Jamais','Presque jamais','Parfois','Assez souvent','Souvent'], [1,2,3,4,5]) },
+    { type: 'radio', id: 'q2', label: '... difficile de contrôler les choses importantes de votre vie ?', options: opt(['Jamais','Presque jamais','Parfois','Assez souvent','Souvent'], [1,2,3,4,5]) },
+    { type: 'radio', id: 'q3', label: '... vous êtes-vous senti(e) nerveux(se) ou stressé(e) ?', options: opt(['Jamais','Presque jamais','Parfois','Assez souvent','Souvent'], [1,2,3,4,5]) },
+    { type: 'radio', id: 'q4', label: '... vous êtes-vous senti(e) confiant(e) pour prendre en main vos problèmes personnels ?', options: opt(['Jamais','Presque jamais','Parfois','Assez souvent','Souvent'], [5,4,3,2,1]) },
+    { type: 'radio', id: 'q5', label: '... avez-vous senti que les choses allaient comme vous le vouliez ?', options: opt(['Jamais','Presque jamais','Parfois','Assez souvent','Souvent'], [5,4,3,2,1]) },
+    { type: 'radio', id: 'q6', label: '... avez-vous pensé ne pas pouvoir assumer toutes les choses à faire ?', options: opt(['Jamais','Presque jamais','Parfois','Assez souvent','Souvent'], [1,2,3,4,5]) },
+    { type: 'radio', id: 'q7', label: '... avez-vous été capable de maîtriser votre énervement ?', options: opt(['Jamais','Presque jamais','Parfois','Assez souvent','Souvent'], [5,4,3,2,1]) },
+    { type: 'radio', id: 'q8', label: '... avez-vous senti que vous dominiez la situation ?', options: opt(['Jamais','Presque jamais','Parfois','Assez souvent','Souvent'], [5,4,3,2,1]) },
+    { type: 'radio', id: 'q9', label: '... vous êtes-vous senti(e) irrité(e) parce que des évènements échappaient à votre contrôle ?', options: opt(['Jamais','Presque jamais','Parfois','Assez souvent','Souvent'], [1,2,3,4,5]) },
+    { type: 'radio', id: 'q10', label: '... avez-vous trouvé que les difficultés s’accumulaient au point de ne plus pouvoir les contrôler ?', options: opt(['Jamais','Presque jamais','Parfois','Assez souvent','Souvent'], [1,2,3,4,5]) },
   ],
 }
+
