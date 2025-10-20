@@ -3,15 +3,14 @@ export type QuestionnaireCategory = { id: string; label: string; items: Question
 
 // Catégories par défaut (modifiables).
 export const defaultCategories: QuestionnaireCategory[] = [
-  { id: 'alimentaire', label: 'Alimentaire', items: [
-    { id: 'dnsm', label: 'DNSM', href: '/questionnaires/dnsm' },
-  ]},
+  { id: 'alimentaire', label: 'Alimentaire', items: [] },
   { id: 'cancerologie', label: 'Cancerologie', items: [] },
   { id: 'cardiologie', label: 'Cardiologie', items: [] },
   { id: 'gastro-enterologie', label: 'Gastro-enterologie', items: [] },
   { id: 'mode-de-vie', label: 'Mode de vie', items: [] },
   { id: 'neuro-psychologie', label: 'Neuro-psychologie', items: [
     { id: 'had', label: 'HAD', href: '/questionnaires/had' },
+    { id: 'dnsm', label: 'DNSM', href: '/questionnaires/dnsm' },
   ]},
   { id: 'pediatrie', label: 'Pédiatrie', items: [] },
   { id: 'rhumatologie', label: 'Rhumatologie', items: [] },
