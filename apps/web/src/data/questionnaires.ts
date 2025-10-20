@@ -17,6 +17,8 @@ export const defaultCategories: QuestionnaireCategory[] = [
     { id: 'dnsm', label: 'DNSM', href: '/questionnaires/dnsm' },
   ]},
   { id: 'pediatrie', label: 'Pédiatrie', items: [] },
+  { id: 'gerontologie', label: 'Gerontologie', items: [] },
+  { id: 'pneumologie', label: 'Pneumologie', items: [] },
   { id: 'rhumatologie', label: 'Rhumatologie', items: [] },
   { id: 'sommeil', label: 'Sommeil', items: [
     { id: 'psqi', label: 'PSQI', href: '/questionnaires/psqi' },
