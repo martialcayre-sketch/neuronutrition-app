@@ -5,6 +5,10 @@
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "explicit",
     "source.organizeImports": "explicit"
-  }
+  },
+  "security.workspace.trust.startupPrompt": "never",
+  "security.workspace.trust.untrustedFiles": "open",
+  "window.confirmBeforeClose": "never",
+  "git.confirmSync": false,
+  "git.autofetch": true
 }
-

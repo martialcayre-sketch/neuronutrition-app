@@ -26,7 +26,12 @@
           "source.fixAll.eslint": "explicit",
           "source.organizeImports": "explicit"
         },
-        "python.analysis.typeCheckingMode": "basic"
+        "python.analysis.typeCheckingMode": "basic",
+        "security.workspace.trust.startupPrompt": "never",
+        "security.workspace.trust.untrustedFiles": "open",
+        "window.confirmBeforeClose": "never",
+        "git.confirmSync": false,
+        "git.autofetch": true
       }
     }
   },
@@ -34,4 +39,3 @@
   "forwardPorts": [3000, 5173, 8080, 5001, 5002, 5003, 5004, 5005, 5000],
   "remoteUser": "vscode"
 }
-
