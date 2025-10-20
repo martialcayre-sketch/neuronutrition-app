@@ -11,9 +11,7 @@ export default function DashboardPage() {
         <h2 className="text-2xl font-semibold">Tableau de bord</h2>
         <div className="grid gap-3">
           <Link className="underline" href="/profile">Profil</Link>
-          <Link className="underline" href="/questionnaires/had">Questionnaire HAD</Link>
-          <Link className="underline" href="/questionnaires/psqi">Questionnaire PSQI</Link>
-          <Link className="underline" href="/questionnaires/dnsm">Questionnaire DNSM</Link>
+          <Link className="underline" href="/questionnaires">Questionnaires (par catégorie)</Link>
           <Link className="underline" href="/admin">Espace admin</Link>
         </div>
         <button className="px-3 py-2 border rounded" onClick={() => signOut(auth)}>Se déconnecter</button>

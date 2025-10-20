@@ -59,6 +59,15 @@ CI GitHub (Settings > Secrets and variables > Actions):
 - `/questionnaires/had|psqi|dnsm`: placeholders, enregistre dans `intakes`.
 - `/admin`: Vérifie le claim `admin` via `getIdTokenResult()`.
 
+### Catégories de questionnaires
+
+- Page d’index: `/questionnaires` — regroupe par catégories (Sommeil, Humeur, Nutrition par défaut).
+- Source par défaut: `apps/web/src/data/questionnaires.ts` (`defaultCategories`).
+- Génération automatique optionnelle depuis un dossier:
+  - Commande: `node scripts/generate_questionnaire_categories.mjs "C:\\chemin\\vers\\QUESTIONNAIRES"`
+  - Produit: `apps/web/src/data/questionnaires.generated.json`
+  - Pour utiliser le JSON généré, adaptez `apps/web/src/app/questionnaires/page.tsx` pour importer ce fichier au lieu des catégories par défaut.
+
 ## Firebase
 
 - `firebase.json`, `.firebaserc`, `firestore.rules`, `storage.rules` inclus.
