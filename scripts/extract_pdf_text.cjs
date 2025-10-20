@@ -1,26 +1,15 @@
 #!/usr/bin/env node
-// Extracts text from PDFs under data/questionnaires/raw[/<Category>] to data/questionnaires/extracted
-// Usage:
-//   pnpm extract                  # all categories
-//   pnpm extract:mode             # just "Mode de vie"
-//   node scripts/extract_pdf_text.mjs "Category Name"
-
-import fs from 'node:fs'
-import fsp from 'node:fs/promises'
-import path from 'node:path'
-
-async function ensure(dep) {
-  try {
-    const mod = await import(dep)
-    return mod.default || mod
-  } catch (e) {
-    console.error(`Dependency '${dep}' is missing. Inside the Dev Container, run: pnpm add -D ${dep}`)
-    process.exit(1)
-  }
+const fs = require('fs')
+const fsp = require('fs/promises')
+const path = require('path')
+let pdfParse
+try { pdfParse = require('pdf-parse') } catch (e) {
+  console.error("Dependency 'pdf-parse' is missing. In the Dev Container run: pnpm add -D pdf-parse")
+  process.exit(1)
 }
-
-let pdfParse = await ensure('pdf-parse')
-if (typeof pdfParse !== 'function' && pdfParse?.default) pdfParse = pdfParse.default
+if (typeof pdfParse !== 'function' && pdfParse && typeof pdfParse.default === 'function') {
+  pdfParse = pdfParse.default
+}
 
 function removeDiacritics(s) {
   return s.normalize('NFD').replace(/\p{Diacritic}+/gu, '').normalize('NFC')

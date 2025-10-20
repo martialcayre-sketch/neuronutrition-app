@@ -10,15 +10,12 @@ export const schema: QSchema = {
   id: 'mes-plaintes-actuelles-et-troubles-ressentis',
   title: 'Mes plaintes actuelles et troubles ressentis',
   fields: [
-    { type: 'multi', id: 'troubles', label: 'Troubles ressentis', options: [
-      { value: 'douleur', label: 'Douleur' },
-      { value: 'fatigue', label: 'Fatigue' },
-      { value: 'sommeil', label: 'Sommeil' },
-      { value: 'humeur', label: 'Humeur' },
-      { value: 'autre', label: 'Autre' },
-    ]},
-    { type: 'likert', id: 'intensite', label: 'Intensité globale', min: 0, max: 10, left: 'Faible', right: 'Forte' },
-    { type: 'text', id: 'commentaire', label: 'Commentaire', placeholder: '(optionnel) Précisions…' },
+    { type: 'likert', id: 'fatigue', label: 'Fatigue (1 = bonne vitalité, 10 = très fatigué·e/épuisé·e)', min: 1, max: 10 },
+    { type: 'likert', id: 'douleurs', label: 'Douleurs (1 = aucune douleur, 10 = douleurs intenses ou chroniques)', min: 1, max: 10 },
+    { type: 'likert', id: 'digestion', label: 'Digestion (1 = aucun problème digestif/intestinal, 10 = beaucoup de troubles)', min: 1, max: 10 },
+    { type: 'likert', id: 'surpoids', label: 'Surpoids (1 = aucun problème de poids, 10 = problèmes importants)', min: 1, max: 10 },
+    { type: 'likert', id: 'insomnie', label: 'Insomnie (1 = aucun problème de sommeil, 10 = insomnie ou troubles du sommeil)', min: 1, max: 10 },
+    { type: 'likert', id: 'moral', label: 'Moral (1 = bon moral/serein·e, 10 = troubles dépressifs/anxiété/angoisse)', min: 1, max: 10 },
+    { type: 'likert', id: 'mobilite', label: 'Mobilité (1 = aucun problème de mobilité, 10 = troubles importants de mobilité)', min: 1, max: 10 },
   ],
 }
-

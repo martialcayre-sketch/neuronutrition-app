@@ -15,5 +15,9 @@
     "format": "pnpm --filter web format || true",
     "extract": "node scripts/extract_pdf_text.mjs",
     "extract:mode": "node scripts/extract_pdf_text.mjs 'Mode de vie'"
+  },
+  "devDependencies": {
+    "pdf-parse": "^2.4.5",
+    "pdfjs-dist": "^5.4.296"
   }
 }

@@ -1,26 +1,20 @@
 #!/usr/bin/env node
-// Extracts text from PDFs under data/questionnaires/raw[/<Category>] to data/questionnaires/extracted
-// Usage:
-//   pnpm extract                  # all categories
-//   pnpm extract:mode             # just "Mode de vie"
-//   node scripts/extract_pdf_text.mjs "Category Name"
-
 import fs from 'node:fs'
 import fsp from 'node:fs/promises'
 import path from 'node:path'
 
-async function ensure(dep) {
+let pdfjsLib
+try {
+  pdfjsLib = await import('pdfjs-dist')
+  if (!pdfjsLib.getDocument) throw new Error('no getDocument')
+} catch (e) {
   try {
-    const mod = await import(dep)
-    return mod.default || mod
-  } catch (e) {
-    console.error(`Dependency '${dep}' is missing. Inside the Dev Container, run: pnpm add -D ${dep}`)
+    pdfjsLib = await import('pdfjs-dist/legacy/build/pdf.mjs')
+  } catch (e2) {
+    console.error("Dependency 'pdfjs-dist' is missing or incompatible. In the Dev Container run: pnpm add -D pdfjs-dist")
     process.exit(1)
   }
 }
-
-let pdfParse = await ensure('pdf-parse')
-if (typeof pdfParse !== 'function' && pdfParse?.default) pdfParse = pdfParse.default
 
 function removeDiacritics(s) {
   return s.normalize('NFD').replace(/\p{Diacritic}+/gu, '').normalize('NFC')
@@ -46,6 +40,19 @@ async function listPdfFiles(dir) {
   return files
 }
 
+async function extractPdfText(buffer) {
+  const loadingTask = pdfjsLib.getDocument({ data: buffer })
+  const pdf = await loadingTask.promise
+  let text = ''
+  for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
+    const page = await pdf.getPage(pageNum)
+    const content = await page.getTextContent()
+    const strings = content.items.map(item => item.str)
+    text += strings.join(' ') + '\n\n'
+  }
+  return { text, pages: pdf.numPages }
+}
+
 async function main() {
   const categoryFilter = process.argv[2] || null
   if (!fs.existsSync(rawRoot)) {
@@ -63,12 +70,12 @@ async function main() {
     const category = rel.split(path.sep)[0]
     const base = path.parse(file).name
     const slug = slugify(base)
-    const buf = await fsp.readFile(file)
-    const data = await pdfParse(buf)
+    const buf = new Uint8Array(await fsp.readFile(file))
+    const data = await extractPdfText(buf)
     const outDir = path.join(outRoot, category)
     await fsp.mkdir(outDir, { recursive: true })
     await fsp.writeFile(path.join(outDir, slug + '.txt'), data.text, 'utf8')
-    await fsp.writeFile(path.join(outDir, slug + '.meta.json'), JSON.stringify({ file: rel, pages: data.numpages, info: data.info }, null, 2), 'utf8')
+    await fsp.writeFile(path.join(outDir, slug + '.meta.json'), JSON.stringify({ file: rel, pages: data.pages }, null, 2), 'utf8')
     console.log('Extracted:', rel, '->', path.join('data/questionnaires/extracted', category, slug + '.txt'))
   }
 }

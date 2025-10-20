@@ -13,61 +13,19 @@ type QField =
 
 type QSchema = { id: string; title: string; fields: QField[]; score?: (payload: Record<string, any>) => Record<string, number> }
 
+// Import detailed schemas/scores when available
+import { schema as schemaContextuel } from '@/src/questionnaires/questionnaire-contextuel-mode-de-vie/schema'
+import { score as scoreContextuel } from '@/src/questionnaires/questionnaire-contextuel-mode-de-vie/score'
+import { schema as schemaSIIN } from '@/src/questionnaires/questionnaire-dactivite-et-de-depense-energetique-globale-siin/schema'
+import { score as scoreSIIN } from '@/src/questionnaires/questionnaire-dactivite-et-de-depense-energetique-globale-siin/score'
+import { schema as schemaPlaintes } from '@/src/questionnaires/mes-plaintes-actuelles-et-troubles-ressentis/schema'
+import { score as scorePlaintes } from '@/src/questionnaires/mes-plaintes-actuelles-et-troubles-ressentis/score'
+
 // Registry for known schemas (placeholders for 3 questionnaires Mode de vie)
 function registry(id: string): QSchema | null {
-  if (id === 'questionnaire-contextuel-mode-de-vie') {
-    return {
-      id,
-      title: 'Questionnaire contextuel mode de vie',
-      fields: [
-        { type: 'radio', id: 'rythme', label: 'Rythme hebdomadaire', options: [
-          { value: 'stable', label: 'Plutôt stable' },
-          { value: 'variable', label: 'Très variable' },
-        ]},
-        { type: 'likert', id: 'stress', label: 'Niveau de stress perçu', min: 0, max: 10, left: 'Faible', right: 'Élevé' },
-        { type: 'multi', id: 'contraintes', label: 'Contraintes principales', options: [
-          { value: 'horaires', label: 'Horaires' },
-          { value: 'deplacements', label: 'Déplacements' },
-          { value: 'familiales', label: 'Familiales' },
-          { value: 'autres', label: 'Autres' },
-        ]},
-        { type: 'text', id: 'notes', label: 'Notes contextuelles', placeholder: 'Activités, environnement, obstacles…' },
-      ],
-      score: (p) => ({ stress: Number(p.stress ?? 0) })
-    }
-  }
-  if (id === 'questionnaire-dactivite-et-de-depense-energetique-globale-siin-def-pro' || id === 'questionnaire-dactivite-et-de-depense-energetique-globale-siin') {
-    return {
-      id,
-      title: 'Activité et dépense énergétique (SIIN)',
-      fields: [
-        { type: 'likert', id: 'marche', label: 'Marche (heures/sem)', min: 0, max: 20 },
-        { type: 'likert', id: 'sport_moderé', label: 'Sport modéré (heures/sem)', min: 0, max: 20 },
-        { type: 'likert', id: 'sport_intense', label: 'Sport intense (heures/sem)', min: 0, max: 20 },
-      ],
-      score: (p) => ({
-        depense: Number(p.marche||0) * 1 + Number(p.sport_moderé||0) * 3 + Number(p.sport_intense||0) * 6,
-      })
-    }
-  }
-  if (id === 'mes-plaintes-actuelles-et-troubles-ressentis') {
-    return {
-      id,
-      title: 'Mes plaintes actuelles et troubles ressentis',
-      fields: [
-        { type: 'multi', id: 'troubles', label: 'Troubles ressentis', options: [
-          { value: 'douleur', label: 'Douleur' },
-          { value: 'fatigue', label: 'Fatigue' },
-          { value: 'sommeil', label: 'Sommeil' },
-          { value: 'humeur', label: 'Humeur' },
-          { value: 'autre', label: 'Autre' },
-        ]},
-        { type: 'likert', id: 'intensite', label: 'Intensité globale', min: 0, max: 10, left: 'Faible', right: 'Forte' },
-        { type: 'text', id: 'commentaire', label: 'Commentaire', placeholder: '(optionnel) Précisions…' },
-      ],
-      score: (p) => ({ intensite: Number(p.intensite ?? 0) })
-    }
-  }
+  if (id === 'questionnaire-contextuel-mode-de-vie') return { ...schemaContextuel, score: scoreContextuel as any }
+  if (id === 'questionnaire-dactivite-et-de-depense-energetique-globale-siin' || id === 'questionnaire-dactivite-et-de-depense-energetique-globale-siin-def-pro') return { ...schemaSIIN, id, score: scoreSIIN as any }
+  if (id === 'mes-plaintes-actuelles-et-troubles-ressentis') return { ...schemaPlaintes, score: scorePlaintes as any }
   return null
 }
 
@@ -156,4 +114,3 @@ export default function Page({ params }: { params: { id: string } }) {
     </RequireAuth>
   )
 }
-

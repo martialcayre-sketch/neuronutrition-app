@@ -1,8 +1,7 @@
-export type Score = { depense: number }
+export type Score = { activite_globale: 'faible'|'moyen'|'fort', travail: string, hors_travail: string }
 export function score(payload: Record<string, any>): Score {
-  const marche = Number(payload.marche || 0)
-  const mod = Number(payload.sport_modere || 0)
-  const intense = Number(payload.sport_intense || 0)
-  return { depense: marche*1 + mod*3 + intense*6 }
+  const t = String(payload.travail || 'faible') as 'faible'|'moyen'|'fort'
+  const h = String(payload.hors_travail || 'faible') as 'faible'|'moyen'|'fort'
+  const activite_globale: 'faible'|'moyen'|'fort' = (t === 'fort' || h === 'fort') ? 'fort' : ((t === 'moyen' || h === 'moyen') ? 'moyen' : 'faible')
+  return { activite_globale, travail: t, hors_travail: h }
 }
-

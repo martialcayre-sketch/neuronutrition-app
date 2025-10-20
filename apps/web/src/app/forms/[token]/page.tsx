@@ -4,6 +4,9 @@ import { useParams } from 'next/navigation'
 import Link from 'next/link'
 import { getPublicFormByToken, submitPublicResponse } from '@/src/lib/forms'
 import catalog from '@/src/data/questionnaires.catalog.json'
+import { schema as schemaContextuel } from '@/src/questionnaires/questionnaire-contextuel-mode-de-vie/schema'
+import { schema as schemaSIIN } from '@/src/questionnaires/questionnaire-dactivite-et-de-depense-energetique-globale-siin/schema'
+import { schema as schemaPlaintes } from '@/src/questionnaires/mes-plaintes-actuelles-et-troubles-ressentis/schema'
 
 type QField =
   | { type: 'radio'; id: string; label: string; options: { value: string; label: string }[] }
@@ -14,21 +17,9 @@ type QField =
 type QSchema = { id: string; title: string; fields: QField[] }
 
 function registry(id: string): QSchema | null {
-  // Reuse minimal schemas from questionnaires route when available
-  if (id === 'questionnaire-contextuel-mode-de-vie') return { id, title: 'Questionnaire contextuel mode de vie', fields: [
-    { type: 'radio', id: 'rythme', label: 'Rythme hebdomadaire', options: [ { value: 'stable', label: 'Plutôt stable' }, { value: 'variable', label: 'Très variable' } ]},
-    { type: 'likert', id: 'stress', label: 'Niveau de stress perçu', min:0, max:10, left:'Faible', right:'Élevé' },
-    { type: 'multi', id: 'contraintes', label: 'Contraintes principales', options: [ { value:'horaires', label:'Horaires' }, { value:'deplacements', label:'Déplacements' }, { value:'familiales', label:'Familiales' }, { value:'autres', label:'Autres' } ]},
-  ] }
-  if (id.startsWith('questionnaire-dactivite-et-de-depense-energetique-globale-siin')) return { id, title: 'Activité et dépense énergétique (SIIN)', fields: [
-    { type:'likert', id:'marche', label:'Marche (heures/sem)', min:0, max:20 },
-    { type:'likert', id:'sport_moderé', label:'Sport modéré (heures/sem)', min:0, max:20 },
-    { type:'likert', id:'sport_intense', label:'Sport intense (heures/sem)', min:0, max:20 },
-  ]}
-  if (id === 'mes-plaintes-actuelles-et-troubles-ressentis') return { id, title:'Mes plaintes actuelles et troubles ressentis', fields: [
-    { type:'multi', id:'troubles', label:'Troubles ressentis', options:[ {value:'douleur',label:'Douleur'},{value:'fatigue',label:'Fatigue'},{value:'sommeil',label:'Sommeil'},{value:'humeur',label:'Humeur'},{value:'autre',label:'Autre'} ] },
-    { type:'likert', id:'intensite', label:'Intensité globale', min:0, max:10, left:'Faible', right:'Forte' }
-  ]}
+  if (id === 'questionnaire-contextuel-mode-de-vie') return schemaContextuel
+  if (id.startsWith('questionnaire-dactivite-et-de-depense-energetique-globale-siin')) return schemaSIIN
+  if (id === 'mes-plaintes-actuelles-et-troubles-ressentis') return schemaPlaintes
   return null
 }
 
@@ -113,4 +104,3 @@ export default function PublicFormPage() {
     </div>
   )
 }
-
