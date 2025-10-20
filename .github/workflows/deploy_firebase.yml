@@ -21,9 +21,8 @@ jobs:
         run: |
           if [ -n "${FIREBASE_SERVICE_ACCOUNT}" ]; then
             echo "$FIREBASE_SERVICE_ACCOUNT" | base64 -d > sa.json
-            firebase use "$FIREBASE_PROJECT_ID"
-            firebase deploy --only functions,hosting --non-interactive --project "$FIREBASE_PROJECT_ID" --token "$(jq -r .private_key_id sa.json || true)"
+            export GOOGLE_APPLICATION_CREDENTIALS="$PWD/sa.json"
+            firebase deploy --only functions,hosting --non-interactive --project "$FIREBASE_PROJECT_ID"
           else
             firebase deploy --only functions,hosting --non-interactive --project "$FIREBASE_PROJECT_ID" --token "$FIREBASE_TOKEN"
           fi
-
