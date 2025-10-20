@@ -1,10 +1,15 @@
 {
+  "firestore": {
+    "rules": "firestore.rules",
+    "indexes": "firestore.indexes.json"
+  },
   "hosting": {
     "public": "apps/web/out",
     "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
     "rewrites": [{ "source": "**", "function": "webapp" }]
   },
   "functions": { "source": "functions" },
+  "storage": { "rules": "storage.rules" },
   "emulators": {
     "hosting": { "port": 5001 },
     "functions": { "port": 5002 },
@@ -14,4 +19,3 @@
     "ui": { "enabled": true, "port": 5000 }
   }
 }
-
