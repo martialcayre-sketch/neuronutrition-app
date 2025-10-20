@@ -58,6 +58,9 @@ CI GitHub (Settings > Secrets and variables > Actions):
 - `/profile`: Édition du profil (collection `profiles`, champ `ownerUid`).
 - `/questionnaires/had|psqi|dnsm`: placeholders, enregistre dans `intakes`.
 - `/admin`: Vérifie le claim `admin` via `getIdTokenResult()`.
+ - `/questionnaires`: lit le catalogue JSON et propose Télécharger/Remplir.
+ - `/questionnaires/[id]`: renderer générique (boutons, curseurs) mobile‑friendly.
+ - `/forms/[token]`: formulaire public (anonyme) pour patients.
 
 ### Catégories de questionnaires
 
@@ -67,6 +70,17 @@ CI GitHub (Settings > Secrets and variables > Actions):
   - Commande: `node scripts/generate_questionnaire_categories.mjs "C:\\chemin\\vers\\QUESTIONNAIRES"`
   - Produit: `apps/web/src/data/questionnaires.generated.json`
   - Pour utiliser le JSON généré, adaptez `apps/web/src/app/questionnaires/page.tsx` pour importer ce fichier au lieu des catégories par défaut.
+
+### Extraction de texte depuis les PDF (pour modéliser les schémas)
+
+- Installer la dépendance (dans le Dev Container): `pnpm add -D pdf-parse`
+- Extraire tout: `pnpm extract`
+- Ou seulement Mode de vie: `pnpm extract:mode`
+- Sortie: `data/questionnaires/extracted/<Catégorie>/<slug>.txt` (+ meta.json)
+
+### Schémas + scoring (à affiner “à l’identique”)
+
+- `apps/web/src/questionnaires/<slug>/schema.ts` et `score.ts` (exemples créés pour 3 questionnaires Mode de vie).
 
 ## Firebase
 

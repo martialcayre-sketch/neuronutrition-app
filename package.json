@@ -12,7 +12,8 @@
     "build": "pnpm --filter web build && pnpm --filter functions build || exit 0",
     "lint": "pnpm --filter web lint || true",
     "test": "pnpm --filter web test || true",
-    "format": "pnpm --filter web format || true"
+    "format": "pnpm --filter web format || true",
+    "extract": "node scripts/extract_pdf_text.mjs",
+    "extract:mode": "node scripts/extract_pdf_text.mjs 'Mode de vie'"
   }
 }
-
