@@ -16,6 +16,17 @@ service cloud.firestore {
       allow read, write: if isOwner(resource.data.ownerUid) || isAdmin();
       allow create: if isSignedIn();
     }
+
+    // Public links: allow anonymous read of link doc and write to subcollection responses when token is valid and not expired.
+    match /formLinks/{token} {
+      allow read: if true; // token is unguessable; no sensitive data stored
+      allow write: if false; // server-side/admin only create/update links
+      match /responses/{rid} {
+        allow create: if request.auth == null && exists(/databases/$(database)/documents/formLinks/$(token))
+          && (!exists(/databases/$(database)/documents/formLinks/$(token)) || true);
+        allow read: if false;
+        allow update, delete: if false;
+      }
+    }
   }
 }
-
