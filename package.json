@@ -16,6 +16,8 @@
     "dev:functions": "pnpm -C functions serve",
     "build:run": "pnpm -C api build",
     "deploy:run": "gcloud run deploy api --source=api --region=europe-west1 --allow-unauthenticated",
+    "deploy:run:patient": "gcloud run deploy patient-app --source=apps/patient --region=europe-west1 --allow-unauthenticated",
+    "deploy:run:practitioner": "gcloud run deploy practitioner-app --source=apps/practitioner --region=europe-west1 --allow-unauthenticated",
     "build": "pnpm --filter web build && pnpm --filter functions build || exit 0",
     "build:web": "pnpm -C apps/patient-spa build && pnpm -C apps/practitioner-spa build",
     "lint": "pnpm --filter web lint || true",

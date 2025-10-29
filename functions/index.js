@@ -15,10 +15,13 @@ exports.webapp = onRequest((req, res) => {
 
 // Simple Express API for Hosting rewrites /api/**
 const app = express();
-app.get('/health', (req, res) => res.json({ ok: true }));
-app.get('/hello', (req, res) => res.json({ message: 'Hello from Functions Gen2 API' }));
+// Support both with and without the /api prefix since Hosting rewrite keeps it
+app.get(['/health', '/api/health'], (req, res) => res.json({ ok: true }));
+app.get(['/hello', '/api/hello'], (req, res) => res.json({ message: 'Hello from Functions Gen2 API' }));
 // Placeholder scoring route
-app.get('/scoring', (req, res) => res.json({ score: null, message: 'Not implemented' }));
+app.get(['/scoring', '/api/scoring'], (req, res) => res.json({ score: null, message: 'Not implemented' }));
+// Fallback 404 for /api/*
+app.use('/api', (req, res) => res.status(404).json({ error: 'Not found', path: req.path }));
 
 exports.api = onRequest(app);
 
