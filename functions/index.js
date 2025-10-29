@@ -86,6 +86,37 @@ exports.getUserClaims = onRequest(async (req, res) => {
   }
 });
 
+// Patient self-activation: mark patient document as approved
+// Client must be authenticated as the patient. No input is required.
+exports.activatePatient = onCall(async (request) => {
+  const { auth } = request;
+  if (!auth) {
+    throw new HttpsError('unauthenticated', 'User must be authenticated');
+  }
+
+  const uid = auth.uid;
+  try {
+    await admin.firestore().collection('patients').doc(uid).set({
+      status: 'approved',
+      activatedAt: admin.firestore.FieldValue.serverTimestamp(),
+    }, { merge: true });
+
+    // Optionally ensure role=patient remains
+    try {
+      const user = await admin.auth().getUser(uid);
+      const claims = user.customClaims || {};
+      if (claims.role !== 'patient') {
+        await admin.auth().setCustomUserClaims(uid, { ...claims, role: 'patient' });
+      }
+    } catch (_) { /* ignore */ }
+
+    return { ok: true };
+  } catch (error) {
+    console.error('activatePatient error', error);
+    throw new HttpsError('internal', 'Activation failed');
+  }
+});
+
 // Invite a patient: create user, send email/SMS via Firestore queue
 exports.invitePatient = onCall(async (request) => {
   const { data, auth } = request;

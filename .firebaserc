@@ -5,6 +5,9 @@
   "targets": {
     "neuronutrition-app": {
       "hosting": {
+        "web": [
+          "neuronutrition-app"
+        ],
         "patient": [
           "neuronutrition-app-patient"
         ],
@@ -13,5 +16,6 @@
         ]
       }
     }
-  }
+  },
+  "etags": {}
 }

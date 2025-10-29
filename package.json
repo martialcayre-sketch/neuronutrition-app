@@ -14,6 +14,8 @@
     "dev:patient-spa": "pnpm -C apps/patient-spa dev",
     "dev:practitioner-spa": "pnpm -C apps/practitioner-spa dev",
     "dev:functions": "pnpm -C functions serve",
+    "build:run": "pnpm -C api build",
+    "deploy:run": "gcloud run deploy api --source=api --region=europe-west1 --allow-unauthenticated",
     "build": "pnpm --filter web build && pnpm --filter functions build || exit 0",
     "build:web": "pnpm -C apps/patient-spa build && pnpm -C apps/practitioner-spa build",
     "lint": "pnpm --filter web lint || true",

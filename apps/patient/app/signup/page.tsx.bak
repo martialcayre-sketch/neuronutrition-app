@@ -13,8 +13,7 @@ import {
   linkWithPopup,
 } from "firebase/auth";
 import { auth, firestore } from "@/lib/firebase";
-import { doc, getDoc, setDoc } from "firebase/firestore";
-import { getFunctions, httpsCallable } from "firebase/functions";
+import { doc, getDoc, updateDoc, setDoc } from "firebase/firestore";
 
 export default function SignupPage() {
   const router = useRouter();
@@ -80,17 +79,18 @@ export default function SignupPage() {
       const user = auth.currentUser;
       if (!user) throw new Error("Non authentifié");
 
-      // Update password locally
+      // Update password
       await updatePassword(user, newPassword);
 
-      // Call secure server-side activation (avoids Firestore rules issues)
-      const functions = getFunctions(auth.app, process.env.NEXT_PUBLIC_FIREBASE_REGION || 'europe-west1');
-      const activate = httpsCallable(functions, 'activatePatient');
-      await activate({});
+      // Update status to approved
+      await updateDoc(doc(firestore, "patients", user.uid), {
+        status: "approved",
+        activatedAt: new Date()
+      });
 
       router.push("/dashboard");
     } catch (err: any) {
-      setError("Erreur lors de l'activation: " + (err?.message || ""));
+      setError("Erreur lors de l'activation: " + err.message);
     } finally {
       setLoading(false);
     }
