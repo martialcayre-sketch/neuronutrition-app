@@ -25,7 +25,7 @@
       ],
       "rewrites": [
         { "source": "/api/**", "function": "api", "region": "europe-west1" },
-        { "source": "**", "run": { "serviceId": "patient-app", "region": "europe-west1" } }
+        { "source": "**", "destination": "/index.html" }
       ]
     },
     {
@@ -37,7 +37,7 @@
       ],
       "rewrites": [
         { "source": "/api/**", "function": "api", "region": "europe-west1" },
-        { "source": "**", "run": { "serviceId": "practitioner-app", "region": "europe-west1" } }
+        { "source": "**", "destination": "/index.html" }
       ]
     }
   ],
