@@ -5,11 +5,17 @@
   "packageManager": "pnpm@9",
   "workspaces": [
     "apps/*",
-    "functions"
+    "packages/*",
+    "functions",
+    "api"
   ],
   "scripts": {
     "dev": "pnpm --filter web dev",
+    "dev:patient-spa": "pnpm -C apps/patient-spa dev",
+    "dev:practitioner-spa": "pnpm -C apps/practitioner-spa dev",
+    "dev:functions": "pnpm -C functions serve",
     "build": "pnpm --filter web build && pnpm --filter functions build || exit 0",
+    "build:web": "pnpm -C apps/patient-spa build && pnpm -C apps/practitioner-spa build",
     "lint": "pnpm --filter web lint || true",
     "test": "pnpm --filter web test || true",
     "format": "pnpm --filter web format || true",

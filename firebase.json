@@ -3,20 +3,43 @@
     "rules": "firestore.rules",
     "indexes": "firestore.indexes.json"
   },
-  "hosting": {
-    "public": "apps/web/out",
-    "ignore": [
-      "firebase.json",
-      "**/.*",
-      "**/node_modules/**"
-    ],
-    "rewrites": [
-      {
-        "source": "**",
-        "function": "webapp"
-      }
-    ]
-  },
+  "hosting": [
+    {
+      "public": "apps/web/out",
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ],
+      "rewrites": [
+        { "source": "**", "function": "webapp" }
+      ]
+    },
+    {
+      "site": "patient",
+      "public": "apps/patient-spa/dist",
+      "ignore": [
+        "**/.*",
+        "**/node_modules/**"
+      ],
+      "rewrites": [
+        { "source": "/api/**", "function": "api" },
+        { "source": "**", "destination": "/index.html" }
+      ]
+    },
+    {
+      "site": "practitioner",
+      "public": "apps/practitioner-spa/dist",
+      "ignore": [
+        "**/.*",
+        "**/node_modules/**"
+      ],
+      "rewrites": [
+        { "source": "/api/**", "function": "api" },
+        { "source": "**", "destination": "/index.html" }
+      ]
+    }
+  ],
   "functions": {
     "source": "functions"
   },
