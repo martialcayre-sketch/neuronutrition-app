@@ -1,119 +1,74 @@
 {
-  "hosting": {
-    "public": "apps/web/dist",
-    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
-    "rewrites": [
-      {
-        "source": "**",
-        "destination": "/index.html"
-      }
-    ],
-    "headers": [
-      {
-        "source": "**/*.@(jpg|jpeg|gif|png|svg|webp)",
-        "headers": [
-          {
-            "key": "Cache-Control",
-            "value": "public, max-age=31536000, immutable"
-          }
-        ]
-      },
-      {
-        "source": "**/*.@(js|css)",
-        "headers": [
-          {
-            "key": "Cache-Control",
-            "value": "public, max-age=31536000, immutable"
-          }
-        ]
-      },
-      {
-        "source": "/@(vite|assets)/**",
-        "headers": [
-          {
-            "key": "Cache-Control",
-            "value": "public, max-age=31536000, immutable"
-          }
-        ]
-      },
-      {
-        "source": "/manifest.json",
-        "headers": [
-          {
-            "key": "Cache-Control",
-            "value": "public, max-age=0, must-revalidate"
-          }
-        ]
-      },
-      {
-        "source": "**",
-        "headers": [
-          {
-            "key": "X-Content-Type-Options",
-            "value": "nosniff"
-          },
-          {
-            "key": "X-Frame-Options",
-            "value": "DENY"
-          },
-          {
-            "key": "X-XSS-Protection",
-            "value": "1; mode=block"
-          },
-          {
-            "key": "Referrer-Policy",
-            "value": "strict-origin-when-cross-origin"
-          },
-          {
-            "key": "Permissions-Policy",
-            "value": "accelerometer=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), usb=()"
-          }
-        ]
-      }
-    ],
-    "cleanUrls": true,
-    "trailingSlash": false
-  },
   "firestore": {
-    "database": "(default)",
-    "location": "europe-west3",
     "rules": "firestore.rules",
     "indexes": "firestore.indexes.json"
+  },
+  "hosting": [
+    {
+      "target": "web",
+      "public": "apps/web/out",
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ],
+      "rewrites": [
+        { "source": "**", "function": "webapp" }
+      ]
+    },
+    {
+      "target": "patient",
+      "public": "apps/patient/out",
+      "ignore": [
+        "**/.*",
+        "**/node_modules/**"
+      ],
+      "rewrites": [
+        { "source": "/api/**", "function": "api", "region": "europe-west1" },
+        { "source": "**", "run": { "serviceId": "patient-app", "region": "europe-west1" } }
+      ]
+    },
+    {
+      "target": "practitioner",
+      "public": "apps/practitioner/out",
+      "ignore": [
+        "**/.*",
+        "**/node_modules/**"
+      ],
+      "rewrites": [
+        { "source": "/api/**", "function": "api", "region": "europe-west1" },
+        { "source": "**", "run": { "serviceId": "practitioner-app", "region": "europe-west1" } }
+      ]
+    }
+  ],
+  "functions": {
+    "source": "functions"
   },
   "storage": {
     "rules": "storage.rules"
   },
-  "functions": [
-    {
-      "codebase": "default",
-      "source": "functions",
-      "runtime": "nodejs20",
-      "ignore": ["node_modules", ".git", "firebase-debug.log", "firebase-debug.*.log", "*.local"],
-      "predeploy": [
-        "npm --prefix \"$RESOURCE_DIR\" run lint",
-        "npm --prefix \"$RESOURCE_DIR\" run build"
-      ]
-    }
-  ],
   "emulators": {
-    "auth": {
-      "port": 9098
+    "hosting": {
+      "port": 5001
     },
     "functions": {
       "port": 5002
     },
     "firestore": {
-      "port": 8081
-    },
-    "hosting": {
       "port": 5003
     },
+    "auth": {
+      "port": 5004
+    },
     "storage": {
-      "port": 9198
+      "port": 5005
     },
     "ui": {
       "enabled": true,
-      "port": 4002
+      "port": 5000
+    },
+    "tasks": {
+      "port": 9499
     },
     "singleProjectMode": true
   }

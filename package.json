@@ -1,57 +1,37 @@
 {
   "name": "neuronutrition-app",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "private": true,
+  "packageManager": "pnpm@9",
+  "workspaces": [
+    "apps/*",
+    "packages/*",
+    "functions",
+    "api"
+  ],
   "scripts": {
-    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview",
-    "prepare": "husky install",
-    "test:e2e": "playwright test",
-    "test:e2e:headed": "playwright test --headed",
-    "test:e2e:install": "playwright install",
-    "seed:practitioner": "node scripts/add-practitioner-prod.js"
-  },
-  "dependencies": {
-    "clsx": "^2.1.0",
-    "firebase": "^10.7.0",
-    "formik": "^2.4.2",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-firebase-hooks": "^5.1.1",
-    "react-hot-toast": "^2.4.1",
-    "react-router-dom": "^6.22.3",
-    "yup": "^1.2.0",
-    "zod": "^3.22.4"
+    "dev": "pnpm --filter web dev",
+    "dev:patient-spa": "pnpm -C apps/patient-spa dev",
+    "dev:practitioner-spa": "pnpm -C apps/practitioner-spa dev",
+    "dev:functions": "pnpm -C functions serve",
+    "build:run": "pnpm -C api build",
+    "deploy:run": "gcloud run deploy api --source=api --region=europe-west1 --allow-unauthenticated",
+    "deploy:run:patient": "gcloud run deploy patient-app --source=apps/patient --region=europe-west1 --allow-unauthenticated",
+    "deploy:run:practitioner": "gcloud run deploy practitioner-app --source=apps/practitioner --region=europe-west1 --allow-unauthenticated",
+    "build": "pnpm --filter web build && pnpm --filter functions build || exit 0",
+    "build:web": "pnpm -C apps/patient-spa build && pnpm -C apps/practitioner-spa build",
+    "lint": "pnpm --filter web lint || true",
+    "test": "pnpm --filter web test || true",
+    "format": "pnpm --filter web format || true",
+    "extract": "node scripts/extract_pdf_text.mjs",
+    "extract:mode": "node scripts/extract_pdf_text.mjs 'Mode de vie'",
+    "deploy:hosting:patient": "firebase deploy --only hosting:patient",
+    "deploy:hosting:practitioner": "firebase deploy --only hosting:practitioner"
   },
   "devDependencies": {
-    "@playwright/test": "^1.56.0",
-    "@types/node": "^24.7.2",
-    "@types/react": "^18.2.66",
-    "@types/react-dom": "^18.2.22",
-    "@vitejs/plugin-react": "^4.3.2",
-    "autoprefixer": "^10.4.16",
-    "concurrently": "^8.2.2",
-    "eslint": "^9.37.0",
     "firebase-admin": "^12.7.0",
-    "husky": "^8.0.3",
-    "lint-staged": "^15.0.2",
-    "postcss": "^8.4.31",
-    "prettier": "^3.0.3",
-    "rimraf": "^5.0.5",
-    "tailwindcss": "^3.3.3",
-    "tsx": "^4.20.6",
-    "typescript": "^5.3.3",
-    "vite": "^4.5.0"
-  },
-  "lint-staged": {
-    "*.{js,jsx,ts,tsx}": [
-      "prettier --write",
-      "eslint --fix"
-    ],
-    "*.{json,md,yml}": [
-      "prettier --write"
-    ]
+    "firebase-tools": "^14.20.0",
+    "pdf-parse": "^2.4.5",
+    "pdfjs-dist": "^5.4.296"
   }
 }
