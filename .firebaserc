@@ -1,5 +1,17 @@
 {
   "projects": {
     "default": "neuronutrition-app"
+  },
+  "targets": {
+    "neuronutrition-app": {
+      "hosting": {
+        "patient": [
+          "neuronutrition-app-patient"
+        ],
+        "practitioner": [
+          "neuronutrition-app-practitioner"
+        ]
+      }
+    }
   }
 }

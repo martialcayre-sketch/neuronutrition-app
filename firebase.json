@@ -16,7 +16,7 @@
       ]
     },
     {
-      "site": "patient",
+      "site": "neuronutrition-app-patient",
       "public": "apps/patient-spa/dist",
       "ignore": [
         "**/.*",
@@ -28,7 +28,7 @@
       ]
     },
     {
-      "site": "practitioner",
+      "site": "neuronutrition-app-practitioner",
       "public": "apps/practitioner-spa/dist",
       "ignore": [
         "**/.*",

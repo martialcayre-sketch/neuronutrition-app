@@ -20,7 +20,9 @@
     "test": "pnpm --filter web test || true",
     "format": "pnpm --filter web format || true",
     "extract": "node scripts/extract_pdf_text.mjs",
-    "extract:mode": "node scripts/extract_pdf_text.mjs 'Mode de vie'"
+    "extract:mode": "node scripts/extract_pdf_text.mjs 'Mode de vie'",
+    "deploy:hosting:patient": "firebase deploy --only hosting:patient",
+    "deploy:hosting:practitioner": "firebase deploy --only hosting:practitioner"
   },
   "devDependencies": {
     "firebase-admin": "^12.7.0",
