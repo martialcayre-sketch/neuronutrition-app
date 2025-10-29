@@ -26,7 +26,12 @@
                     "extract":  "node scripts/extract_pdf_text.mjs",
                     "extract:mode":  "node scripts/extract_pdf_text.mjs \u0027Mode de vie\u0027",
                     "deploy:hosting:patient":  "firebase deploy --only hosting:patient",
-                    "deploy:hosting:practitioner":  "firebase deploy --only hosting:practitioner"
+    "deploy:hosting:practitioner":  "firebase deploy --only hosting:practitioner"
+                ,
+                "dev:emu": "firebase emulators:start --only functions,firestore,auth",
+                "dev:patient": "pnpm -C apps/patient dev",
+                "dev:practitioner": "pnpm -C apps/practitioner dev",
+                "dev:stack:win": "powershell -ExecutionPolicy Bypass -File scripts/dev-local.ps1"
                 },
     "devDependencies":  {
                             "firebase-admin":  "^12.7.0",
