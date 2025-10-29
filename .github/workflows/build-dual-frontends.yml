@@ -15,10 +15,11 @@ jobs:
           version: 9
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 20.17.0
           cache: 'pnpm'
       - run: pnpm install --frozen-lockfile
       - run: pnpm -C apps/patient-spa build
       - run: pnpm -C apps/practitioner-spa build
       - run: pnpm -C functions build || true
+
 

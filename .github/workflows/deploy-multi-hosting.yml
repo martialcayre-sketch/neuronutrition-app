@@ -13,7 +13,7 @@ jobs:
           version: 9
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 20.17.0
           cache: 'pnpm'
       - run: pnpm install --frozen-lockfile
       - name: Build SPAs
@@ -27,4 +27,5 @@ jobs:
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT }}'
           projectId: neuronutrition-app
           channelId: live
+
 

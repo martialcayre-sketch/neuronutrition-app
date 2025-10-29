@@ -14,7 +14,7 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 20.17.0
 
       # Authenticate to Google Cloud using a Service Account JSON stored in
       # the repo secret FIREBASE_SERVICE_ACCOUNT
@@ -30,4 +30,5 @@ jobs:
       - name: Deploy Firebase Hosting (patient + practitioner)
         run: |
           firebase deploy --only hosting:patient,hosting:practitioner --project neuronutrition-app
+
 
